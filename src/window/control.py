@@ -14,15 +14,17 @@ class Control:
     reset_btn (Button): The button that resets the graph and control panel back to the default setting.
     buttons (List): A list of all of the buttons on the control panel.
     selected_btn (Button): Holds the button that the user selected.
+    generated (boolean): Tells us if we have generated data to be sorted.
     """
 
     def __init__(self, win):
         self.win = win
-        self.gen_btn = Button(self.win, GEN_BTN_X, GEN_BTN_Y, 'Generate')
-        self.sort_btn = Button(self.win, SORT_BTN_X, SORT_BTN_Y, 'Sort')
-        self.reset_btn = Button(self.win, RESET_BTN_X, RESET_BTN_Y, 'Reset')
-        self.buttons = [self.gen_btn, self.sort_btn, self.reset_btn]
+        self.gen_btn = Button(self.win, GEN_BTN_X, GEN_BTN_Y, TYPE_GEN)
+        self.sort_btn = Button(self.win, SORT_BTN_X, SORT_BTN_Y, TYPE_SORT)
+        self.reset_btn = Button(self.win, RESET_BTN_X, RESET_BTN_Y, TYPE_RESET)
+        self.buttons = {TYPE_GEN: self.gen_btn, TYPE_SORT: self.sort_btn, TYPE_RESET: self.reset_btn}
         self.selected_btn = None
+        self.generated = False
     
     def draw(self):
         pygame.draw.rect(self.win, DARK_GRAY, (GRAPH_WIDTH, 0, CONTROL_WIDTH, CONTROL_HEIGHT))
@@ -40,10 +42,18 @@ class Control:
         """
 
         x, y = pos
-
-        for btn in self.buttons:
+        for btn in self.buttons.values():
             if btn.x <= x <= btn.x + BUTTON_WIDTH and btn.y <= y <= btn.y + BUTTON_HEIGHT:
                 self.selected_btn = btn
+
+                if btn.name == TYPE_GEN:
+                    self.generated = True
+                    self.buttons[TYPE_SORT].on = True
+                elif btn.name == TYPE_SORT:
+                    self.turn_off([self.buttons[TYPE_RESET]])
+                elif btn.name == TYPE_RESET:
+                    self.reset()
+
                 return True
         
         return False
@@ -58,7 +68,7 @@ class Control:
         btns (List): Buttons to be ignored and not switched off.
         """
 
-        for btn in self.buttons:
+        for btn in self.buttons.values():
             if btn in btns:
                 continue
             else:
@@ -74,9 +84,11 @@ class Control:
         btns (List): Holds the specific buttons to be reset. Default is an empty list.
         """
 
+        self.generated = False
+
         if not btns:
             # empty list - all buttons are reset
-            for btn in self.buttons:
+            for btn in self.buttons.values():
                 btn.reset()
         else:
             # reset buttons given
@@ -93,7 +105,7 @@ class Control:
 
         self.draw()
 
-        for btn in self.buttons:
+        for btn in self.buttons.values():
             btn.update()
         
         pygame.display.update()

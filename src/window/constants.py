@@ -12,6 +12,9 @@ GEN_BTN_X = SORT_BTN_X = RESET_BTN_X = GRAPH_WIDTH + (CONTROL_WIDTH / 2) - (BUTT
 GEN_BTN_Y = 100
 SORT_BTN_Y = 250
 RESET_BTN_Y = 400
+TYPE_GEN = 'Generate'
+TYPE_SORT = 'Sort'
+TYPE_RESET = 'Reset'
 
 # colours in rgb
 WHITE = (255, 255, 255)

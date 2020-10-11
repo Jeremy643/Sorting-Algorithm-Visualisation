@@ -11,8 +11,6 @@ class Button:
     x (int): The position of the button along the width of the window.
     y (int): The position of the button along the height of the window.
     name (string): The name of the button.
-    colour (tuple): The colour of the button as an rgb value.
-    txt_colour (tuple): The colour of the text in a button as an rgb value.
     btn_outline (tuple): The colour of the outline of the button as an rgb value.
     on (boolean): The button can either be on and clickable or off and not clickable.
     """
@@ -25,15 +23,23 @@ class Button:
         self._init()
     
     def _init(self):
-        self.colour = GRAY
-        self.txt_colour = BLACK
         self.btn_outline = BLACK
-        self.on = True
+        if self.name == TYPE_SORT:
+            self.on = False
+        else:
+            self.on = True
     
     def draw(self):
         """
         Display the buttons on the control panel.
         """
+
+        if self.on:
+            self.colour = GRAY
+            self.txt_colour = BLACK
+        else:
+            self.colour = DARKER_GRAY
+            self.txt_colour = WHITE
 
         pygame.draw.rect(self.win, self.colour, (self.x, self.y, BUTTON_WIDTH, BUTTON_HEIGHT))
         pygame.draw.rect(self.win, self.btn_outline, (self.x, self.y, BUTTON_WIDTH, BUTTON_HEIGHT), 2)
@@ -48,8 +54,6 @@ class Button:
     
     def turn_off(self):
         self.on = False
-        self.colour = DARKER_GRAY
-        self.txt_colour = WHITE
     
     def reset(self):
         """
