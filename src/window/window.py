@@ -37,7 +37,16 @@ class Window:
             # the user can't select anything on the graph
             return False
         
-        return self.control.select(pos)
+        succ = self.control.select(pos)
+        if self.control.selected_btn == self.control.gen_btn:
+            data = self.control.get_data()
+            self.graph.set_data(data)
+        elif self.control.selected_btn == self.control.sort_btn:
+            self.graph.insertion_sort()
+        elif self.control.selected_btn == self.control.reset_btn:
+            self.graph.reset_data()
+
+        return succ
     
     def update(self):
         """

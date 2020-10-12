@@ -1,6 +1,7 @@
 import pygame
 from .button import Button
 from .constants import *
+from random import randint
 
 
 class Control:
@@ -25,6 +26,24 @@ class Control:
         self.buttons = {TYPE_GEN: self.gen_btn, TYPE_SORT: self.sort_btn, TYPE_RESET: self.reset_btn}
         self.selected_btn = None
         self.generated = False
+
+    def get_data(self, number=100):
+        """
+        Get a random list of numbers.
+
+        Parameter:
+        number (int): The number of data points in the list, defualt of a 1000.
+        """
+
+        data = []
+        lower = 10
+        upper = PLOT_HEIGHT
+
+        for i in range(number):
+            rand_val = randint(lower, upper)
+            data.append(rand_val)
+
+        return data
     
     def draw(self):
         pygame.draw.rect(self.win, DARK_GRAY, (GRAPH_WIDTH, 0, CONTROL_WIDTH, CONTROL_HEIGHT))
@@ -49,7 +68,7 @@ class Control:
                 if btn.name == TYPE_GEN:
                     self.generated = True
                     self.buttons[TYPE_SORT].on = True
-                elif btn.name == TYPE_SORT:
+                elif btn.name == TYPE_SORT and self.generated:
                     self.turn_off([self.buttons[TYPE_RESET]])
                 elif btn.name == TYPE_RESET:
                     self.reset()
