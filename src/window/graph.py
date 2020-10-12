@@ -13,11 +13,15 @@ class Graph:
     Attribute:
     win (Surface): The surface to which we will display data.
     data (List): The data to be sorted.
+    sorting_index (int): Index of the data element that is being sorted.
+    checking_index (int): Index of the data value being compared with the current value being sorted.
     """
 
     def __init__(self, win):
         self.win = win
         self.data = []
+        self.sorting_index = None
+        self.checking_index = None
     
     def _draw_graph(self):
         pygame.draw.rect(self.win, BLACK, (PLOT_X, PLOT_Y, PLOT_WIDTH, PLOT_HEIGHT), 2)
@@ -54,10 +58,19 @@ class Graph:
         bar_width = PLOT_WIDTH // len(self.data)
 
         width_counter = PLOT_X
+        index = 0
         for dp in self.data:
-            pygame.draw.rect(self.win, BLUE, (width_counter, PLOT_HEIGHT - dp + PLOT_Y, bar_width, dp))
+            if index == self.sorting_index:
+                colour = GREEN
+            elif index == self.checking_index:
+                colour = RED
+            else:
+                colour = BLUE
+
+            pygame.draw.rect(self.win, colour, (width_counter, PLOT_HEIGHT - dp + PLOT_Y, bar_width, dp))
             pygame.draw.rect(self.win, BLACK, (width_counter, PLOT_HEIGHT - dp + PLOT_Y, bar_width, dp), 2)
             width_counter += bar_width
+            index += 1
 
     def set_data(self, data):
         self.data = data
@@ -78,7 +91,27 @@ class Graph:
             self._draw_data()
     
     def insertion_sort(self):
-        pass
+        for i in range(1, len(self.data)):
+            curr = self.data[i]
+
+            self.sorting_index = i
+            self.update()
+
+            for j in reversed(range(0, i)):
+                self.checking_index = j
+                self.update()
+
+                if self.data[j] <= curr:
+                    self.data.insert(j + 1, curr)
+                    break
+                elif j == 0:
+                    self.data.insert(0, curr)
+                    
+            del self.data[i + 1]
+        
+        # reset indices
+        self.sorting_index = None
+        self.checking_index = None
     
     def update(self):
         """
