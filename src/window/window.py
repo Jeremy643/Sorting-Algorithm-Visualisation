@@ -54,6 +54,9 @@ class Window:
                 data_enum = list(enumerate(self.graph.data))
                 self.graph.mergesort(data_enum)
                 self.graph.reset_sorting_indices()
+            elif self.type_sort == TYPE_SELECTION:
+                self.graph.selection_sort()
+                self.graph.reset_sorting_indices()
         elif self.control.selected_btn == self.control.reset_btn:
             self.graph.reset_data()
 

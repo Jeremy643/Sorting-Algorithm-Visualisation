@@ -68,6 +68,32 @@ class Graph:
         
         return new_left
     
+    def _find_minimum(self, index):
+        """
+        Finds the minimum value in data from the specified index to the end.
+
+        Parameter:
+        index (int): Index to start looking for the minimum value.
+
+        Return:
+        min_index (int): Index of the minimum value in data from the specified index.
+        """
+
+        minimum = float('inf')
+        min_index = None
+        i = index
+        for d in self.data[index:]:
+            if d < minimum:
+                # highlight the current minimum value
+                self.sorting_index = i
+                self.update()
+
+                minimum = d
+                min_index = i
+            i += 1
+        
+        return min_index
+    
     def reset_sorting_indices(self):
         self.sorting_index = None
         self.checking_index = None
@@ -188,6 +214,19 @@ class Graph:
             merged_arr.extend(left)
         
         return merged_arr
+    
+    def selection_sort(self):
+        """
+        Find the minimum value in the unsorted part of the list and move it to the end of the sorted part of the list.
+        """
+
+        index = 0
+        while index < len(self.data):
+            self.checking_index = index
+
+            min_index = self._find_minimum(index)
+            self.data[index], self.data[min_index] = self.data[min_index], self.data[index]
+            index += 1
     
     def update(self):
         """

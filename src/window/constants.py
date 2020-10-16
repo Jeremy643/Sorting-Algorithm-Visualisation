@@ -20,6 +20,7 @@ TYPE_RESET = 'Reset'
 TYPE_INSERTION = 'insertion'
 TYPE_QUICKSORT = 'quicksort'
 TYPE_MERGESORT = 'mergesort'
+TYPE_SELECTION = 'selection'
 
 # graph information
 PLOT_X, PLOT_Y = GRAPH_WIDTH // 20, GRAPH_HEIGHT // 20  # 5% buffer of total
