@@ -5,8 +5,8 @@ from window.window import Window
 
 
 FPS = 60
-TYPE = TYPE_INSERTION
-WINDOW_NAME = 'Insertion Sort'
+TYPE = TYPE_QUICKSORT
+WINDOW_NAME = 'Quicksort'
 WINDOW_LOCATION = 100
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" % (WINDOW_LOCATION, WINDOW_LOCATION)

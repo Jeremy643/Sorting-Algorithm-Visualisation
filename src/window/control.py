@@ -27,7 +27,7 @@ class Control:
         self.selected_btn = None
         self.generated = False
 
-    def get_data(self, number=100):
+    def get_data(self, number=101):
         """
         Get a random list of numbers.
 

@@ -14,10 +14,12 @@ class Window:
                    the graph.
     control (Control): An object to represent the remaining part of the overall window that allows
                        the user to control various parts of the graph.
+    type_sort (string): The type of sorting algorithm we want to run.
     """
 
-    def __init__(self, win):
+    def __init__(self, win, type_sort):
         self.win = win
+        self.type_sort = type_sort
         self.graph = Graph(self.win)
         self.control = Control(self.win)
     
@@ -42,7 +44,16 @@ class Window:
             data = self.control.get_data()
             self.graph.set_data(data)
         elif self.control.selected_btn == self.control.sort_btn:
-            self.graph.insertion_sort()
+            if self.type_sort == TYPE_INSERTION:
+                self.graph.insertion_sort()
+                self.graph.reset_sorting_indices()
+            elif self.type_sort == TYPE_QUICKSORT:
+                self.graph.quicksort(self.graph.data, 0, len(self.graph.data) - 1)
+                self.graph.reset_sorting_indices()
+            elif self.type_sort == TYPE_MERGESORT:
+                data_enum = list(enumerate(self.graph.data))
+                self.graph.mergesort(data_enum)
+                self.graph.reset_sorting_indices()
         elif self.control.selected_btn == self.control.reset_btn:
             self.graph.reset_data()
 

@@ -16,6 +16,11 @@ TYPE_GEN = 'Generate'
 TYPE_SORT = 'Sort'
 TYPE_RESET = 'Reset'
 
+# sorting algorithm types
+TYPE_INSERTION = 'insertion'
+TYPE_QUICKSORT = 'quicksort'
+TYPE_MERGESORT = 'mergesort'
+
 # graph information
 PLOT_X, PLOT_Y = GRAPH_WIDTH // 20, GRAPH_HEIGHT // 20  # 5% buffer of total
 PLOT_WIDTH, PLOT_HEIGHT = GRAPH_WIDTH - (2 * PLOT_X), WINDOW_HEIGHT - (2 * PLOT_Y)

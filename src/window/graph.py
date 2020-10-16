@@ -40,19 +40,6 @@ class Graph:
             txt_rect.y = i
 
             self.win.blit(txt_surf, txt_rect)
-        
-        # label = jump
-        # for i in range(jump, PLOT_WIDTH + jump, jump):
-        #     pygame.font.init()
-        #     txt = pygame.font.Font('freesansbold.ttf', 20)
-        #     txt_surf = txt.render(f'{label}', False, BLACK)
-        #     label += jump
-
-        #     txt_rect = txt_surf.get_rect()
-        #     txt_rect.y = PLOT_HEIGHT + (PLOT_Y + 10)
-        #     txt_rect.x = i
-
-        #     self.win.blit(txt_surf, txt_rect)
 
     def _draw_data(self):
         bar_width = PLOT_WIDTH // len(self.data)
@@ -71,6 +58,19 @@ class Graph:
             pygame.draw.rect(self.win, BLACK, (width_counter, PLOT_HEIGHT - dp + PLOT_Y, bar_width, dp), 2)
             width_counter += bar_width
             index += 1
+    
+    def _increase_index(self, left):
+        new_left = []
+
+        for l in left:
+            index, value = l
+            new_left.append((index + 1, value))
+        
+        return new_left
+    
+    def reset_sorting_indices(self):
+        self.sorting_index = None
+        self.checking_index = None
 
     def set_data(self, data):
         self.data = data
@@ -108,10 +108,86 @@ class Graph:
                     self.data.insert(0, curr)
                     
             del self.data[i + 1]
+
+            self._reset_sorting_indices()
+    
+    def quicksort(self, arr, low, high):
+        if len(arr) == 1:
+            return arr
         
-        # reset indices
-        self.sorting_index = None
-        self.checking_index = None
+        if low < high:
+            p = self.partition(low, high)
+            self.quicksort(self.data, low, p - 1)
+            self.quicksort(self.data, p + 1, high)
+    
+    def partition(self, low, high):
+        """
+        Splits the data list into partitions.
+
+        This method is used by the quicksort algorithm.
+
+        Parameters:
+        low (int): Index of the start of the partition.
+        high (int): Index of the end of the partition.
+        """
+
+        pivot = self.data[high]
+        self.sorting_index = high
+        self.update()
+        i = low - 1
+        for j in range(low, high):
+            self.checking_index = j
+            self.update()
+            if self.data[j] <= pivot:
+                i += 1
+                self.data[i], self.data[j] = self.data[j], self.data[i]
+        self.data[i + 1], self.data[high] = self.data[high], self.data[i + 1]
+        return i + 1
+    
+    def mergesort(self, sl):
+        if len(sl) == 1:
+            return sl
+
+        left = self.mergesort(sl[:len(sl)//2])
+        right = self.mergesort(sl[len(sl)//2:])
+
+        return self.merge(left, right)
+    
+    def merge(self, left, right):
+        """
+        Combine two lists to get a sorted list.
+
+        Parameters:
+        left (tuple): Holds the index and then the actual value.
+        right (tuple): Holds the index and then the actual value.
+        """
+
+        merged_arr = []
+
+        while len(left) > 0 and len(right) > 0:
+            self.sorting_index = right[0][0]
+            self.checking_index = left[0][0]
+            self.update()
+            
+            if left[0][1] <= right[0][1]:
+                merged_arr.append(left.pop(0))
+            else:
+                ri = right.pop(0)
+                old_index = ri[0]
+                ri = (left[0][0], ri[1])
+                left = self._increase_index(left)
+                merged_arr.append(ri)
+
+                self.data.insert(ri[0], ri[1])
+                del self.data[old_index + 1]
+                self.update()
+        
+        if len(left) == 0:
+            merged_arr.extend(right)
+        elif len(right) == 0:
+            merged_arr.extend(left)
+        
+        return merged_arr
     
     def update(self):
         """
