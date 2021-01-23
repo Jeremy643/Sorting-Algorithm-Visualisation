@@ -21,7 +21,8 @@ class Graph:
         self.win = win
         self.data = []
         self.sorting_index = None
-        self.checking_index = None
+        self.checking_index1 = None
+        self.checking_index2 = None
     
     def _draw_graph(self):
         pygame.draw.rect(self.win, BLACK, (PLOT_X, PLOT_Y, PLOT_WIDTH, PLOT_HEIGHT), 2)
@@ -49,7 +50,7 @@ class Graph:
         for dp in self.data:
             if index == self.sorting_index:
                 colour = GREEN
-            elif index == self.checking_index:
+            elif index == self.checking_index1 or index == self.checking_index2:
                 colour = RED
             else:
                 colour = BLUE
@@ -96,7 +97,8 @@ class Graph:
     
     def reset_sorting_indices(self):
         self.sorting_index = None
-        self.checking_index = None
+        self.checking_index1 = None
+        self.checking_index2 = None
 
     def set_data(self, data):
         self.data = data
@@ -124,7 +126,7 @@ class Graph:
             self.update()
 
             for j in reversed(range(0, i)):
-                self.checking_index = j
+                self.checking_index1 = j
                 self.update()
 
                 if self.data[j] <= curr:
@@ -161,11 +163,13 @@ class Graph:
         self.sorting_index = high
         self.update()
         i = low - 1
+        self.checking_index2 = i
         for j in range(low, high):
-            self.checking_index = j
+            self.checking_index1 = j
             self.update()
             if self.data[j] <= pivot:
                 i += 1
+                self.checking_index2 = i
                 self.data[i], self.data[j] = self.data[j], self.data[i]
         self.data[i + 1], self.data[high] = self.data[high], self.data[i + 1]
         return i + 1
@@ -192,7 +196,7 @@ class Graph:
 
         while len(left) > 0 and len(right) > 0:
             self.sorting_index = right[0][0]
-            self.checking_index = left[0][0]
+            self.checking_index1 = left[0][0]
             self.update()
             
             if left[0][1] <= right[0][1]:
@@ -222,7 +226,7 @@ class Graph:
 
         index = 0
         while index < len(self.data):
-            self.checking_index = index
+            self.checking_index1 = index
 
             min_index = self._find_minimum(index)
             self.data[index], self.data[min_index] = self.data[min_index], self.data[index]
