@@ -137,7 +137,7 @@ class Graph:
                     
             del self.data[i + 1]
 
-            self._reset_sorting_indices()
+            self.reset_sorting_indices()
     
     def quicksort(self, arr, low, high):
         if len(arr) == 1:
